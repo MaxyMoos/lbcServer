@@ -6,10 +6,10 @@ class LeBonCoinItem(object):
 
 	def __init__(self,
 				 title=None,
-				 price,
-				 date,
-				 location,
-				 item_kind):
+				 price=None,
+				 date=None,
+				 location=None,
+				 item_kind=None):
 		"""Initialize instance"""
 		if title is None:
 			raise Exception("Cannot initialize a LeBonCoinItem without a title !")
