@@ -4,11 +4,17 @@ from bs4 import BeautifulSoup
 
 import unicodedata
 import re
+import platform
 from datetime import datetime, timedelta
 from collections import OrderedDict
 from urllib.request import urlopen
 from urllib.error import URLError
 
+curOS = platform.system()
+if curOS == "Windows":
+	BS_PARSER = "html.parser"
+else:
+	BS_PARSER = "lxml"
 
 class LeBonCoin_UrlRequester(object):
 	"""The object that repeatedly makes the HTTP requests to LeBonCoin"""
@@ -77,4 +83,4 @@ class LeBonCoin_UrlRequester(object):
 		"""Queries LeBonCoin and returns the HTML document"""
 
 		f = urlopen(self.url)
-		return BeautifulSoup(f)
+		return BeautifulSoup(f, BS_PARSER)

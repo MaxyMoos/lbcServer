@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from item import LeBonCoinItem
 
@@ -20,53 +20,61 @@ class LeBonCoin_HTMLParser(object):
 		itemElements = html_contents.body.find_all('section',
 												   attrs={'class': 'item_infos'})
 		for item_html in itemElements:
-			items += [self.create_item_from_HTML(item_html)]
+			newItem = self.create_item_from_HTML(item_html)
+			if newItem is not None:
+				items.append(newItem)
 		return items
 
 	def get_datetime_from_string(self, date_string):
-	    monthsInfo = {
-	        'jan':          1,
-	        'fév':          2,
-	        'mar':          3,
-	        'avr':          4,
-	        'mai':          5,
-	        'juin':         6,
-	        'juil':         7,
-	        'août':         8,
-	        'sept':         9,
-	        'oct':          10,
-	        'nov':          11,
-	        'déc':          12
-	    }
+		monthsInfo = {
+			'jan':          1,
+			'fév':          2,
+			'mar':          3,
+			'avr':          4,
+			'mai':          5,
+			'juin':         6,
+			'juil':         7,
+			'août':         8,
+			'sept':         9,
+			'oct':          10,
+			'nov':          11,
+			'déc':          12
+		}
 
-	    if date_string:
-	        str_elements = [i.strip() for i in date_string.split()]
+		if date_string:
+			str_elements = [i.strip() for i in date_string.split()]
 
-	        if "Aujourd'hui" in str_elements[0]:
-	            day = datetime.now().day
-	            month = datetime.now().month
-	        elif "Hier" in str_elements[0]:
-	            yday = datetime.now() - timedelta(days=1)
-	            day = yday.day
-	            month = yday.month
-	        else:
-	        	day = int(str_elements[0])
-	        	month = monthsInfo[str_elements[1][:-1]]
+			if "Aujourd'hui" in str_elements[0]:
+				day = datetime.now().day
+				month = datetime.now().month
+			elif "Hier" in str_elements[0]:
+				yday = datetime.now() - timedelta(days=1)
+				day = yday.day
+				month = yday.month
+			else:
+				day = int(str_elements[0])
+				month = monthsInfo[str_elements[1][:-1]]
 
-	        hour = int(str_elements[-1][0:2])
-	        minutes = int(str_elements[-1][3:5])
+			hour = int(str_elements[-1][0:2])
+			minutes = int(str_elements[-1][3:5])
 
-	        return datetime(datetime.today().year,
-	                        month,
-	                        day,
-	                        hour=hour,
-	                        minute=minutes)
+			return datetime(datetime.today().year,
+							month,
+							day,
+							hour=hour,
+							minute=minutes)
 
 	def create_item_from_HTML(self, item_html):
 		"""Create a single LBCItem instance from the HTML"""
-		
-		item_title = item_html.h2.text.strip()
-		item_price = item_html.h3.text.strip()
+
+		if item_html.h2:
+			item_title = item_html.h2.text.strip()
+		else:
+		 return None
+		if item_html.h3:
+			item_price = item_html.h3.text.strip()
+		else:
+			item_price = None
 		other_info = item_html.find_all('p',
 										attrs={'class': 'item_supp'})
 
@@ -82,3 +90,4 @@ class LeBonCoin_HTMLParser(object):
 							 item_date,
 							 item_location,
 							 item_kind)
+		return item

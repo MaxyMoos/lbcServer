@@ -19,3 +19,9 @@ class LeBonCoinItem(object):
 		self.dateStr = date
 		self.location = location
 		self.item_kind = item_kind
+
+	def __repr__(self):
+		return "<{} | {} | {} | {}>".format(self.title,
+		                               		self.priceStr,
+		                               		self.dateStr,
+		                               		self.location)
