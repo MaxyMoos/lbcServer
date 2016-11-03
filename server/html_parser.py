@@ -70,7 +70,7 @@ class LeBonCoin_HTMLParser(object):
         if item_html.h2:
             item_title = item_html.h2.text.strip()
         else:
-         return None
+            return None
         if item_html.h3:
             item_price = item_html.h3.text.strip()
         else:

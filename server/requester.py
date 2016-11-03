@@ -3,12 +3,9 @@
 from bs4 import BeautifulSoup
 
 import unicodedata
-import re
 import platform
-from datetime import datetime, timedelta
 from collections import OrderedDict
 from urllib.request import urlopen
-from urllib.error import URLError
 
 
 curOS = platform.system()
@@ -76,10 +73,10 @@ class LeBonCoin_UrlRequester(object):
         """Builds the URL. Yes."""
 
         self.url = self.LBC_BASE_URL + \
-                   self.LBC_STANDARD_SUFFIX + \
-                   self.LBC_FRENCH_REGIONS[self.region] + \
-                   self.LBC_SEARCH_PARAMS + \
-                   self.URL_formatted_search_query
+            self.LBC_STANDARD_SUFFIX + \
+            self.LBC_FRENCH_REGIONS[self.region] + \
+            self.LBC_SEARCH_PARAMS + \
+            self.URL_formatted_search_query
 
     def get_HTML(self):
         """Queries LeBonCoin and returns the HTML document"""
