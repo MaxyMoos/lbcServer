@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
+"""Includes all necessities to parse HTML pages from LBC."""
+
 from datetime import datetime, timedelta
 
 from item import LeBonCoinItem
 
 
 class LeBonCoin_HTMLParser(object):
-    """Parses the HTML contents passed to it and builds list of items"""
+    """Parses the HTML contents passed to it and builds list of items."""
 
     def get_items_from_HTML(self, html_contents):
-        """Get all items from the `html_contents` input
+        """Get all items from the `html_contents` input.
 
         `html_contents` must be a BeautifulSoup-parsed HTML instance
         """
@@ -26,6 +28,7 @@ class LeBonCoin_HTMLParser(object):
         return items
 
     def get_datetime_from_string(self, date_string):
+        """Parse the date string from LBC and return a corresponding datetime instance."""
         monthsInfo = {
             'jan':          1,
             'fév':          2,
@@ -65,8 +68,7 @@ class LeBonCoin_HTMLParser(object):
                             minute=minutes)
 
     def create_item_from_HTML(self, item_html):
-        """Create a single LBCItem instance from the HTML"""
-
+        """Create a single LBCItem instance from the HTML."""
         if item_html.h2:
             item_title = item_html.h2.text.strip()
         else:

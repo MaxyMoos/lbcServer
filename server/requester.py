@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""All the necessary classes/methods to send regular requests to LBC website."""
+
 from bs4 import BeautifulSoup
 
 import unicodedata
@@ -16,7 +18,7 @@ else:
 
 
 class LeBonCoin_UrlRequester(object):
-    """The object that repeatedly makes the HTTP requests to LeBonCoin"""
+    """The object that repeatedly makes the HTTP requests to LeBonCoin."""
 
     LBC_BASE_URL = "http://www.leboncoin.fr"
     LBC_STANDARD_SUFFIX = "/annonces/offres"
@@ -35,8 +37,7 @@ class LeBonCoin_UrlRequester(object):
                  search_query=None,
                  region=None,
                  search_interval=300):
-        """Initialize instance"""
-
+        """Initialize instance."""
         self._validate_inputs(search_query, region, search_interval)
         self.search_query = search_query
         self.region = region
@@ -44,7 +45,7 @@ class LeBonCoin_UrlRequester(object):
         self._build_URL()
 
     def _validate_inputs(self, search_query, region, search_interval):
-        """Checks inputs and throws an Exception if they are not OK"""
+        """Check inputs and throws an Exception if they are not OK."""
         err_msg = []
         if search_query is None:
             err_msg += ["No search query entered"]
@@ -60,9 +61,7 @@ class LeBonCoin_UrlRequester(object):
 
     @property
     def URL_formatted_search_query(self):
-        """Remove accents in query and transform spaces in '+' signs"""
-
-        # Remove accents
+        """Remove accents in query and transform spaces in '+' signs."""
         tmpBytes = unicodedata.normalize('NFD', self.search_query).encode('ascii', 'ignore')
         tmpStr = tmpBytes.decode('utf-8')
         # Replace spaces by '+'
@@ -70,8 +69,7 @@ class LeBonCoin_UrlRequester(object):
         return tmpStr
 
     def _build_URL(self):
-        """Builds the URL. Yes."""
-
+        """Build the URL. Yes."""
         self.url = self.LBC_BASE_URL + \
             self.LBC_STANDARD_SUFFIX + \
             self.LBC_FRENCH_REGIONS[self.region] + \
@@ -79,7 +77,6 @@ class LeBonCoin_UrlRequester(object):
             self.URL_formatted_search_query
 
     def get_HTML(self):
-        """Queries LeBonCoin and returns the HTML document"""
-
+        """Query LeBonCoin and returns the HTML document."""
         f = urlopen(self.url)
         return BeautifulSoup(f, BS_PARSER)
