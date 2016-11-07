@@ -19,9 +19,11 @@ class LeBonCoin_HTMLParser(object):
             raise Exception("Empty HTML passed to get_items_from_HTML !")
 
         items = []
-        itemElements = html_contents.body.find_all('section',
-                                                   attrs={'class': 'item_infos'})
-        for item_html in itemElements:
+
+        urlElements = html_contents.body.find_all('a',
+                                                  attrs={'class': "list_item clearfix trackable"})
+
+        for item_html in urlElements:
             newItem = self.create_item_from_HTML(item_html)
             if newItem is not None:
                 items.append(newItem)
@@ -69,6 +71,9 @@ class LeBonCoin_HTMLParser(object):
 
     def create_item_from_HTML(self, item_html):
         """Create a single LBCItem instance from the HTML."""
+        item_url = 'http:' + item_html.attrs['href']
+        item_html = item_html.section
+
         if item_html.h2:
             item_title = item_html.h2.text.strip()
         else:
@@ -83,12 +88,16 @@ class LeBonCoin_HTMLParser(object):
         # This assumes that there will *always* be 3 items in the list. Dangerous.
         item_kind = other_info[0].text.strip()
         item_location = other_info[1].text.strip()
+        if '/' in item_location:
+            # Remove extra spaces
+            item_location = " - ".join([item.strip() for item in item_location.split('/')])
         item_date = other_info[2].text.strip()
 
         item_date = self.get_datetime_from_string(item_date)
 
         item = LeBonCoinItem(item_title,
                              item_price,
+                             item_url,
                              item_date,
                              item_location,
                              item_kind)

@@ -8,6 +8,7 @@ class LeBonCoinItem(object):
     def __init__(self,
                  title=None,
                  price=None,
+                 url=None,
                  date=None,
                  location=None,
                  item_kind=None):
@@ -15,7 +16,11 @@ class LeBonCoinItem(object):
         if title is None:
             raise Exception("Cannot initialize a LeBonCoinItem without a title !")
 
+        if url is None:
+            raise Exception("Cannot initialize a LeBonCoinItem without an URL !")
+
         self.title = title
+        self.url = url
         self.priceStr = price
         self.dateStr = date
         self.location = location
