@@ -10,6 +10,7 @@ from collections import OrderedDict
 from urllib.request import urlopen
 
 
+# Select relevant HTML parser depending on the current OS
 curOS = platform.system()
 if curOS == "Windows":
     BS_PARSER = "html.parser"
