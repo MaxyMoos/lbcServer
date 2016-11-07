@@ -2,6 +2,9 @@
 
 """Defines the structure of a single LBC item."""
 
+import json
+
+
 class LeBonCoinItem(object):
     """Represents an item displayed in LBC."""
 
@@ -10,6 +13,7 @@ class LeBonCoinItem(object):
                  price=None,
                  url=None,
                  date=None,
+                 dateStr=None,
                  location=None,
                  item_kind=None):
         """Initialize instance."""
@@ -22,7 +26,8 @@ class LeBonCoinItem(object):
         self.title = title
         self.url = url
         self.priceStr = price
-        self.dateStr = date
+        self.date = date
+        self.dateStr = dateStr
         self.location = location
         self.item_kind = item_kind
 
@@ -32,3 +37,16 @@ class LeBonCoinItem(object):
                                             self.priceStr,
                                             self.dateStr,
                                             self.location)
+
+    def to_json(self):
+        fields_to_export = ['title',
+                            'url',
+                            'priceStr',
+                            'dateStr',
+                            'location',
+                            'item_kind']
+
+        d = {}
+        for field in fields_to_export:
+            d[field] = getattr(self, field)
+        return json.dumps(d)

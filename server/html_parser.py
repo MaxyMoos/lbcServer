@@ -93,12 +93,14 @@ class LeBonCoin_HTMLParser(object):
             item_location = " - ".join([item.strip() for item in item_location.split('/')])
         item_date = other_info[2].text.strip()
 
+        item_dateStr = item_date
         item_date = self.get_datetime_from_string(item_date)
 
         item = LeBonCoinItem(item_title,
                              item_price,
                              item_url,
                              item_date,
+                             item_dateStr,
                              item_location,
                              item_kind)
         return item
