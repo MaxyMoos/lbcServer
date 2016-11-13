@@ -9,6 +9,8 @@ import platform
 from collections import OrderedDict
 from urllib.request import urlopen
 
+from html_parser import LeBonCoin_HTMLParser
+
 
 # Select relevant HTML parser depending on the current OS
 curOS = platform.system()
