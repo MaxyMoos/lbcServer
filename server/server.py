@@ -22,7 +22,7 @@ log.addHandler(handler)
 class LBCServer(object):
 	"""The server"""
 
-	DEF_HOST = ''
+	DEF_HOST = 'localhost'
 	DEF_PORT = 8888
 
 	ADD_CODE = 1
@@ -36,8 +36,8 @@ class LBCServer(object):
 		self.port = port
 		self._mapping = {
 							self.ADD_CODE: self.process_add,
-							self.DELETE_CODE: self.process_delete,
-							self.UPDATE_CODE: self.process_update
+							# self.DELETE_CODE: self.process_delete,
+							# self.UPDATE_CODE: self.process_update
 				   		}
 		self.queries = []
 
@@ -48,19 +48,33 @@ class LBCServer(object):
 		# Bind the socket
 		try:
 			self.socket.bind((self.host, self.port))
+		except OSError as e:
+			if e.errno == 98:
+				log.error("Address already in use ({}:{}), terminating server".format(self.host, self.port))
+				return
+			else:
+				raise e
 		except socket.error as msg:
 			log.error("Socket binding failed! Error code = {} - {}".format(msg[0], msg[1]))
 			return
 
+		log.info("Server started and listening on {}:{}".format(self.host, self.port))
 		self.socket.listen(10)
 
 		while True:
-			conn, addr = self.socket.accept()
-			log.info("Connected with {}".format(addr[0]))
+			try:
+				conn, addr = self.socket.accept()
+				log.info("Connected with {}".format(addr[0]))
 
-			start_new_thread(self.process_incoming_request, (conn, addr[0]))
-
-		self.socket.close()
+				start_new_thread(self.process_incoming_request, (conn, addr[0]))
+			except KeyboardInterrupt:
+				log.info("\nServer terminated by user (keyboard interrupt)")
+			except Exception as e:
+				log.error(e)
+			finally:
+				self.socket.shutdown(socket.SHUT_RDWR)
+				self.socket.close()
+				return
 
 	def process_incoming_request(self, conn, ip_addr):
 		"""Process a request received from a client"""
