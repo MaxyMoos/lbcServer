@@ -117,7 +117,7 @@ class LBCServer(object):
 		new_qManager = query_manager.LeBonCoin_QueryManager(query, location, freq)
 		self.queries.append(new_qManager)
 		new_qManager.run()
-		
+
 
 
 if __name__ == "__main__":
