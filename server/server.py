@@ -69,12 +69,17 @@ class LBCServer(object):
 				start_new_thread(self.process_incoming_request, (conn, addr[0]))
 			except KeyboardInterrupt:
 				log.info("\nServer terminated by user (keyboard interrupt)")
+				self.close_socket()
+				return
 			except Exception as e:
 				log.error(e)
-			finally:
-				self.socket.shutdown(socket.SHUT_RDWR)
-				self.socket.close()
+				self.close_socket()
 				return
+
+	def close_socket(self):
+		log.debug("Shutting down socket...")
+		self.socket.shutdown(socket.SHUT_RDWR)
+		self.socket.close()
 
 	def process_incoming_request(self, conn, ip_addr):
 		"""Process a request received from a client"""
