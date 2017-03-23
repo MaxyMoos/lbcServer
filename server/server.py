@@ -25,9 +25,9 @@ class LBCServer(object):
 	DEF_HOST = 'localhost'
 	DEF_PORT = 8888
 
-	ADD_CODE = 1
-	DELETE_CODE = 2
-	UPDATE_CODE = 3
+	ADD_CODE = '1'
+	DELETE_CODE = '2'
+	UPDATE_CODE = '3'
 
 
 	def __init__(self, host=DEF_HOST, port=DEF_PORT):
@@ -93,12 +93,12 @@ class LBCServer(object):
 					break
 				try:
 					data = str(data, 'utf-8')
+					log.info("{} - Received data: {}".format(ip_addr, data))
 					data = json.loads(data)
 					self.process_incoming_data(data)
 				except json.JSONDecodeError as e:
 					log.error("{} - Unsupported data received: {}".format(ip_addr, data))
 
-				log.info("{} - Received data: {}".format(ip_addr, data))
 			except ConnectionResetError:
 				log.warning("Client {} was disconnected".format(ip_addr))
 				break
@@ -106,9 +106,9 @@ class LBCServer(object):
 		log.info("Client {} session terminated".format(ip_addr))
 		conn.close()
 
-	def process_incoming_data(self, data, ip_addr):
+	def process_incoming_data(self, data):
 		"""Process received JSON-formatted data"""
-		for code, code_data in data.iteritems():
+		for code, code_data in data.items():
 			self._mapping[code](code_data)  # Process the current node
 
 	def process_add(self, data):
