@@ -34,7 +34,7 @@ class LeBonCoin_HTMLParser(object):
         monthsInfo = {
             'jan':          1,
             'fév':          2,
-            'mar':          3,
+            'mars':         3,
             'avr':          4,
             'mai':          5,
             'juin':         6,
@@ -49,6 +49,8 @@ class LeBonCoin_HTMLParser(object):
         if date_string:
             str_elements = [i.strip() for i in date_string.split()]
 
+            if "Urgent" in str_elements[0]:
+                str_elements = str_elements[1:]
             if "Aujourd'hui" in str_elements[0]:
                 day = datetime.now().day
                 month = datetime.now().month
