@@ -106,7 +106,9 @@ class LBCServer(object):
                     data = str(data, 'utf-8')
                     log.info("{} - Received data: {}".format(ip_addr, data))
                     data = json.loads(data)
-                    self.process_incoming_data(data)
+                    ret = self.process_incoming_data(data)
+                    if ret:
+                        conn.send(json.dumps(ret).encode('utf-8'))
                 except json.JSONDecodeError as e:
                     log.error(
                         "{} - Unsupported data received: {}".format(
@@ -123,8 +125,10 @@ class LBCServer(object):
 
     def process_incoming_data(self, data):
         """Process received JSON-formatted data"""
+        ret = {}
         for code, code_data in data.items():
-            self._mapping[code](code_data)  # Process the current node
+            ret[code] = self._mapping[code](code_data)  # Process the current node
+        return ret
 
     def process_add(self, data):
         if not all(x in data.keys() for x in ('query', 'location', 'freq')):
@@ -138,7 +142,7 @@ class LBCServer(object):
             query, location, freq
         )
         self.queries.append(new_qManager)
-        new_qManager.run()
+        return {'items': [str(item) for item in new_qManager.run()]}
 
 
 if __name__ == "__main__":

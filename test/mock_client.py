@@ -32,6 +32,12 @@ class MockClient(object):
             print("MockClient: Cannot send data \"{}\": "
                   "unsupported data type".format(data))
 
+    def recv(self, data_size):
+        if self.is_connected:
+            return self._socket.recv(data_size)
+        else:
+            print("MockClient: Cannot receive data - no connection is active")
+
 
 if __name__ == "__main__":
     try:
@@ -45,5 +51,12 @@ if __name__ == "__main__":
             }
         }
         client.send(json.dumps(data))
+        while(True):
+            try:
+                data = client.recv(1024)
+                if data:
+                    print("Received data:\n{}".format(data))
+            except ConnectionResetError:
+                break
     except Exception as e:
         print(e)

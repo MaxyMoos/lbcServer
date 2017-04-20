@@ -31,3 +31,4 @@ class LeBonCoin_QueryManager(object):
         html = self.requester.get_HTML()
         items = self.parser.get_items_from_HTML(html)
         pprint.pprint(items)
+        return items
