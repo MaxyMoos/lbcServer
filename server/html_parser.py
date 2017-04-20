@@ -29,6 +29,15 @@ class LeBonCoin_HTMLParser(object):
                 items.append(newItem)
         return items
 
+    def strip_date_string(self, date_string):
+        """Handle 'Urgent' dates"""
+        str_elements = [i.strip() for i in date_string.split()]
+
+        if "Urgent" in str_elements[0]:
+            return " ".join(str_elements[1:])
+        else:
+            return date_string
+
     def get_datetime_from_string(self, date_string):
         """Parse the date string from LBC and return a corresponding datetime
         instance."""
@@ -77,14 +86,18 @@ class LeBonCoin_HTMLParser(object):
         item_url = 'http:' + item_html.attrs['href']
         item_html = item_html.section
 
+        # Retrieve ad title
         if item_html.h2:
             item_title = item_html.h2.text.strip()
         else:
             return None
+        # Retrieve item price
         if item_html.h3:
             item_price = item_html.h3.text.strip()
+            item_price = " ".join(item_price.split())  # Remove extra spaces
         else:
             item_price = None
+        # Retrieve other info
         other_info = item_html.find_all('p',
                                         attrs={'class': 'item_supp'})
 
@@ -99,7 +112,7 @@ class LeBonCoin_HTMLParser(object):
             )
         item_date = other_info[2].text.strip()
 
-        item_dateStr = item_date
+        item_dateStr = self.strip_date_string(item_date)
         item_date = self.get_datetime_from_string(item_date)
 
         item = LeBonCoinItem(item_title,
