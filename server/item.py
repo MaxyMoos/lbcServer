@@ -18,10 +18,14 @@ class LeBonCoinItem(object):
                  item_kind=None):
         """Initialize instance."""
         if title is None:
-            raise Exception("Cannot initialize a LeBonCoinItem without a title !")
+            raise Exception(
+                "Cannot initialize a LeBonCoinItem without a title!"
+            )
 
         if url is None:
-            raise Exception("Cannot initialize a LeBonCoinItem without an URL !")
+            raise Exception(
+                "Cannot initialize a LeBonCoinItem without an URL!"
+            )
 
         self.title = title
         self.url = url

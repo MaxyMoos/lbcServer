@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""All the necessary classes/methods to send regular requests to LBC website."""
+"""All the necessary classes/methods to send regular requests to LBC website"""
 
 from bs4 import BeautifulSoup
 
@@ -8,8 +8,6 @@ import unicodedata
 import platform
 from collections import OrderedDict
 from urllib.request import urlopen
-
-from html_parser import LeBonCoin_HTMLParser
 
 
 # Select relevant HTML parser depending on the current OS
@@ -57,7 +55,9 @@ class LeBonCoin_UrlRequester(object):
         elif region not in self.LBC_FRENCH_REGIONS.keys():
             err_msg += ["Invalid region entered: {}".format(region)]
         if search_interval < 0:
-            err_msg += ["{}s is not a valid search interval".format(search_interval)]
+            err_msg += [
+                "{}s is not a valid search interval".format(search_interval)
+            ]
 
         if len(err_msg) > 0:
             raise Exception('\n'.join(err_msg))
@@ -65,7 +65,8 @@ class LeBonCoin_UrlRequester(object):
     @property
     def URL_formatted_search_query(self):
         """Remove accents in query and transform spaces in '+' signs."""
-        tmpBytes = unicodedata.normalize('NFD', self.search_query).encode('ascii', 'ignore')
+        tmpBytes = unicodedata.normalize('NFD', self.search_query).encode(
+            'ascii', 'ignore')
         tmpStr = tmpBytes.decode('utf-8')
         # Replace spaces by '+'
         tmpStr = tmpStr.replace(' ', '+')

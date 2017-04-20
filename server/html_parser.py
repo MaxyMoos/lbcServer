@@ -19,9 +19,9 @@ class LeBonCoin_HTMLParser(object):
             raise Exception("Empty HTML passed to get_items_from_HTML !")
 
         items = []
-
+        css_class = "list_item clearfix trackable"
         urlElements = html_contents.body.find_all('a',
-                                                  attrs={'class': "list_item clearfix trackable"})
+                                                  attrs={'class': css_class})
 
         for item_html in urlElements:
             newItem = self.create_item_from_HTML(item_html)
@@ -30,7 +30,8 @@ class LeBonCoin_HTMLParser(object):
         return items
 
     def get_datetime_from_string(self, date_string):
-        """Parse the date string from LBC and return a corresponding datetime instance."""
+        """Parse the date string from LBC and return a corresponding datetime
+        instance."""
         monthsInfo = {
             'jan':          1,
             'fév':          2,
@@ -87,12 +88,15 @@ class LeBonCoin_HTMLParser(object):
         other_info = item_html.find_all('p',
                                         attrs={'class': 'item_supp'})
 
-        # This assumes that there will *always* be 3 items in the list. Dangerous.
+        # This assumes that there will *always* be 3 items in the list.
+        # Dangerous.
         item_kind = other_info[0].text.strip()
         item_location = other_info[1].text.strip()
         if '/' in item_location:
             # Remove extra spaces
-            item_location = " - ".join([item.strip() for item in item_location.split('/')])
+            item_location = " - ".join(
+                [item.strip() for item in item_location.split('/')]
+            )
         item_date = other_info[2].text.strip()
 
         item_dateStr = item_date
