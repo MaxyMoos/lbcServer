@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 
 import socket
 import json
@@ -29,19 +29,21 @@ class MockClient(object):
         elif not self.is_connected:
             print("MockClient: Cannot send data - no connection is active")
         else:
-            print("MockClient: Cannot send data \"{}\": unsupported data type".format(data))
+            print("MockClient: Cannot send data \"{}\": "
+                  "unsupported data type".format(data))
 
 
 if __name__ == "__main__":
     try:
         client = MockClient(host="localhost", port=8888)
         client.connect()
-        data = {1:  {
-                        'query': u"Voiture",
-                        'location': u'Paris',
-                        'freq': 60,
-                    }
-               }
+        data = {
+            1:  {
+                'query': u"Voiture",
+                'location': u'Paris',
+                'freq': 60,
+            }
+        }
         client.send(json.dumps(data))
     except Exception as e:
         print(e)
