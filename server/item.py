@@ -42,13 +42,15 @@ class LeBonCoinItem(object):
                                             self.dateStr,
                                             self.location)
 
-    def to_json(self):
-        fields_to_export = ['title',
-                            'url',
-                            'priceStr',
-                            'dateStr',
-                            'location',
-                            'item_kind']
+    def to_json(self, fields_to_export=None):
+        """Get a JSON representation of the item"""
+        if not fields_to_export:
+            fields_to_export = ['title',
+                                'url',
+                                'priceStr',
+                                'dateStr',
+                                'location',
+                                'item_kind']
 
         d = {}
         for field in fields_to_export:
