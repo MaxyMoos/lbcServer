@@ -8,6 +8,7 @@ import json
 from _thread import start_new_thread
 
 import query_manager
+from item import LeBonCoinItemJSONEncoder
 
 import logging
 
@@ -115,7 +116,6 @@ class LBCServer(object):
                             ip_addr, data
                         )
                     )
-
             except ConnectionResetError:
                 log.warning("Client {} was disconnected".format(ip_addr))
                 break
@@ -142,7 +142,7 @@ class LBCServer(object):
             query, location, freq
         )
         self.queries.append(new_qManager)
-        return {'items': [str(item) for item in new_qManager.run()]}
+        return json.dumps(new_qManager.run(), cls=LeBonCoinItemJSONEncoder)
 
 
 if __name__ == "__main__":

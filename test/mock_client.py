@@ -5,6 +5,13 @@ import json
 import time
 import errno
 
+if __name__ == "__main__" and __package__ is None:
+    from os import sys, path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
+from server.item import LeBonCoinItemJSONDecoder
+
+
 class MockClient(object):
     def __init__(self, host=None, port=None):
         self.host = host
@@ -101,6 +108,9 @@ if __name__ == "__main__":
         client.send(json.dumps(data))
 
         # Wait for response and print it
-        print(json.loads(client.receive_response()))
+        json_response = client.receive_response()
+        received_data = json.loads(json_response)['1']
+        received_items = json.loads(received_data, cls=LeBonCoinItemJSONDecoder)
+        print(received_items)
     except Exception as e:
         print(e)
